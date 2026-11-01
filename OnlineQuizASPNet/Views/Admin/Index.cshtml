@@ -1,0 +1,56 @@
+@model System.Data.DataRow
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold">Bảng Điều Khiển Quản Trị & Giáo Viên</h3>
+    <div>
+        <a href="/Admin/CreateQuestion" class="btn btn-primary"><i class="fa-solid fa-plus me-1"></i>Thêm Câu Hỏi Mới</a>
+        <a href="/Admin/Results" class="btn btn-outline-secondary"><i class="fa-solid fa-square-poll-vertical me-1"></i>Bảng Điểm Thí Sinh</a>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card p-3 border-primary text-center">
+            <h6 class="text-muted">Tổng Môn Học</h6>
+            <h2 class="fw-bold text-primary">@Model["TotalSubjects"]</h2>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3 border-success text-center">
+            <h6 class="text-muted">Ngân Hàng Câu Hỏi</h6>
+            <h2 class="fw-bold text-success">@Model["TotalQuestions"]</h2>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3 border-warning text-center">
+            <h6 class="text-muted">Đề Thi Khả Dụng</h6>
+            <h2 class="fw-bold text-warning">@Model["TotalExams"]</h2>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3 border-info text-center">
+            <h6 class="text-muted">Lượt Đã Dự Thi</h6>
+            <h2 class="fw-bold text-info">@Model["TotalSubmissions"]</h2>
+        </div>
+    </div>
+</div>
+
+<div class="card p-4">
+    <h5 class="fw-bold mb-3"><i class="fa-solid fa-screwdriver-wrench me-2"></i>Tính năng quản lý nhanh</h5>
+    <div class="list-group">
+        <a href="/Admin/Questions" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <span><i class="fa-solid fa-database me-2 text-primary"></i>Quản lý ngân hàng câu hỏi & đáp án</span>
+            <span class="badge bg-primary rounded-pill">Xem</span>
+        </a>
+        <a href="/Admin/Results" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <span><i class="fa-solid fa-chart-column me-2 text-success"></i>Theo dõi kết quả & điểm thi của thí sinh</span>
+            <span class="badge bg-success rounded-pill">Xem</span>
+        </a>
+        <a href="/Exam/Index" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <span><i class="fa-solid fa-eye me-2 text-warning"></i>Giao diện làm bài thi của thí sinh (Preview)</span>
+            <span class="badge bg-warning text-dark rounded-pill">Thử nghiệm</span>
+        </a>
+    </div>
+</div>

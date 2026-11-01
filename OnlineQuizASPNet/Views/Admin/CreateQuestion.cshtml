@@ -1,0 +1,71 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var dtMon = ViewBag.MonHoc as System.Data.DataTable;
+}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card p-4">
+            <h4 class="fw-bold text-primary mb-3"><i class="fa-solid fa-plus me-2"></i>Thêm Câu Hỏi Vào Ngân Hàng</h4>
+            <form method="post" action="/Admin/CreateQuestion">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Môn học</label>
+                    <select name="maMon" class="form-select" required>
+                        @foreach(System.Data.DataRow r in dtMon.Rows)
+                        {
+                            <option value="@r["MaMon"]">@r["TenMon"] (@r["MaMon"])</option>
+                        }
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Loại câu hỏi</label>
+                    <select name="loaiCauHoi" id="loaiCauHoi" class="form-select" onchange="toggleQuestionType()">
+                        <option value="TracNghiem">Trắc nghiệm chọn đáp án đúng</option>
+                        <option value="TuLuan">Tự luận / So sánh đáp án nhập vào</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Nội dung câu hỏi</label>
+                    <textarea name="noiDung" class="form-control" rows="3" placeholder="Nhập đề bài câu hỏi..." required></textarea>
+                </div>
+
+                <!-- Phương án Trắc nghiệm -->
+                <div id="sectionTracNghiem">
+                    <label class="form-label fw-semibold">Các phương án trả lời (Tích chọn phương án đúng nhất):</label>
+                    @for(int i = 0; i < 4; i++)
+                    {
+                        <div class="input-group mb-2">
+                            <div class="input-group-text">
+                                <input type="radio" name="dapAnDungIndex" value="@i" @(i == 0 ? "checked" : "") />
+                            </div>
+                            <input type="text" name="dapAn" class="form-control" placeholder="Đáp án @((char)(65 + i))..." />
+                        </div>
+                    }
+                </div>
+
+                <!-- Phương án Tự Luận -->
+                <div id="sectionTuLuan" style="display:none;">
+                    <label class="form-label fw-semibold">Đáp án chuẩn (Hệ thống sẽ đối chiếu với câu trả lời của thí sinh):</label>
+                    <input type="text" name="dapAnDungTuLuan" class="form-control" placeholder="Nhập cụm từ đáp án chính xác..." />
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary fw-semibold"><i class="fa-solid fa-floppy-disk me-1"></i>Lưu câu hỏi</button>
+                    <a href="/Admin/Questions" class="btn btn-outline-secondary">Hủy bỏ</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleQuestionType() {
+        var loai = document.getElementById("loaiCauHoi").value;
+        if (loai === "TracNghiem") {
+            document.getElementById("sectionTracNghiem").style.display = "block";
+            document.getElementById("sectionTuLuan").style.display = "none";
+        } else {
+            document.getElementById("sectionTracNghiem").style.display = "none";
+            document.getElementById("sectionTuLuan").style.display = "block";
+        }
+    }
+</script>

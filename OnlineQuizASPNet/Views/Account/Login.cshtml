@@ -1,0 +1,30 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card p-4">
+            <h4 class="text-center fw-bold mb-3 text-primary"><i class="fa-solid fa-user-lock me-2"></i>ĐĂNG NHẬP HỆ THỐNG</h4>
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger py-2">@ViewBag.Error</div>
+            }
+            <form method="post" action="/Account/Login">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Tên đăng nhập / MSSV</label>
+                    <input type="text" name="taiKhoan" class="form-control" placeholder="Nhập tài khoản (vd: thisinh1, admin)" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Mật khẩu</label>
+                    <input type="password" name="matKhau" class="form-control" placeholder="Nhập mật khẩu" required />
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">Đăng Nhập</button>
+            </form>
+            <div class="mt-4 p-3 bg-light rounded text-muted small">
+                <strong>Tài khoản thử nghiệm:</strong><br/>
+                - Thí sinh: <code>thisinh1</code> / Mật khẩu: <code>123456</code><br/>
+                - Quản trị: <code>admin</code> / Mật khẩu: <code>admin123</code>
+            </div>
+        </div>
+    </div>
+</div>

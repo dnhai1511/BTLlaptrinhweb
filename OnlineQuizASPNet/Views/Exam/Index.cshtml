@@ -1,0 +1,31 @@
+@model System.Data.DataTable
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold mb-0">Danh Sách Kỳ Thi & Đề Thi Môn Học</h3>
+</div>
+
+<div class="row g-4">
+    @foreach (System.Data.DataRow row in Model.Rows)
+    {
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 p-4 d-flex flex-column justify-content-between">
+                <div>
+                    <span class="badge badge-subject mb-2 p-2">@row["TenMon"]</span>
+                    <h5 class="fw-bold text-dark mt-2">@row["TenDeThi"]</h5>
+                    <ul class="list-unstyled text-secondary small mt-3">
+                        <li class="mb-2"><i class="fa-regular fa-clock me-2 text-primary"></i>Thời gian: <strong>@row["ThoiGianLamBai"] phút</strong></li>
+                        <li class="mb-2"><i class="fa-solid fa-list-ol me-2 text-success"></i>Số lượng: <strong>@row["SoLuongCauHoi"] câu hỏi</strong> (Sinh ngẫu nhiên)</li>
+                        <li><i class="fa-solid fa-shuffle me-2 text-warning"></i>Cơ chế: <strong>Xáo trộn đề & đáp án</strong></li>
+                    </ul>
+                </div>
+                <div class="mt-3 pt-3 border-top">
+                    <a href="/Exam/Take/@row["MaDeThi"]" class="btn btn-primary w-100 fw-semibold" onclick="return confirm('Bạn có chắc chắn muốn bắt đầu làm bài thi này? Đồng hồ đếm ngược sẽ chạy ngay lập tức.');">
+                        <i class="fa-solid fa-pen-to-square me-1"></i> Bắt đầu thi
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

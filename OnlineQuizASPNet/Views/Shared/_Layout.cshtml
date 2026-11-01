@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hệ Thống Thi Trắc Nghiệm Trực Tuyến</title>
+    <!-- Bootstrap CSS Unicode-friendly -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .navbar-brand { font-weight: 700; color: #1d4ed8 !important; }
+        .card { border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .btn-primary { background-color: #2563eb; border-color: #2563eb; }
+        .badge-subject { background-color: #e0e7ff; color: #3730a3; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-white bg-white border-bottom sticky-top py-3">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="fa-solid fa-graduation-cap me-2"></i>TRẮC NGHIỆM ONLINE</a>
+            <div class="d-flex align-items-center">
+                @if (Session["User"] != null)
+                {
+                    var user = (OnlineQuizASPNet.Models.UserModel)Session["User"];
+                    <span class="me-3 text-secondary">Xin chào, <strong>@user.HoTen</strong> (@user.VaiTro)</span>
+                    if (user.VaiTro == "Admin" || user.VaiTro == "GiaoVien")
+                    {
+                        <a href="/Admin/Index" class="btn btn-outline-primary btn-sm me-2"><i class="fa-solid fa-gear me-1"></i>Trang Quản Trị</a>
+                    }
+                    <a href="/Exam/Index" class="btn btn-outline-success btn-sm me-2"><i class="fa-solid fa-list-check me-1"></i>Danh Sách Đề</a>
+                    <a href="/Account/Logout" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-right-from-bracket me-1"></i>Đăng xuất</a>
+                }
+                else
+                {
+                    <a href="/Account/Login" class="btn btn-primary btn-sm"><i class="fa-solid fa-user me-1"></i>Đăng nhập</a>
+                }
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        @RenderBody()
+    </div>
+
+    <footer class="footer mt-auto py-3 bg-white border-top text-center text-muted">
+        <div class="container text-center">
+            <small>© Đề tài Website Thi Trắc Nghiệm Trực Tuyến - ASP.NET & SQL Server</small>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

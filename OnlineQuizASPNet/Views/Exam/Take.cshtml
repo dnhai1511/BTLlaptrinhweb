@@ -1,0 +1,163 @@
+@model OnlineQuizASPNet.Models.ExamTakingViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <!-- Cột trái: Nội dung bài thi -->
+    <div class="col-lg-9">
+        <div class="card p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+                <h4 class="fw-bold text-primary mb-0">@Model.TenDeThi</h4>
+                <span class="badge bg-secondary p-2 fs-6">Tổng cộng: @Model.DanhSachCauHoi.Count câu hỏi</span>
+            </div>
+
+            <form id="quizForm">
+                <input type="hidden" id="maDeThi" value="@Model.MaDeThi" />
+                @for (int i = 0; i < Model.DanhSachCauHoi.Count; i++)
+                {
+                    var q = Model.DanhSachCauHoi[i];
+                    <div class="question-block mb-4 p-3 border rounded bg-white shadow-sm" id="cau_@q.MaCauHoi">
+                        <div class="fw-bold fs-6 mb-3 text-dark">
+                            <span class="badge bg-primary me-2">Câu @(i + 1)</span> @q.NoiDung
+                            <span class="badge bg-light text-muted border ms-2">@(q.LoaiCauHoi == "TuLuan" ? "Tự luận / Điền đáp án" : "Trắc nghiệm")</span>
+                        </div>
+
+                        @if (q.LoaiCauHoi == "TracNghiem")
+                        {
+                            <div class="answers ps-2">
+                                @foreach (var ans in q.DanhSachDapAn)
+                                {
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input q-option" type="radio" 
+                                               name="cauhoi_@q.MaCauHoi" 
+                                               id="dapan_@ans.MaDapAn" 
+                                               value="@ans.MaDapAn" 
+                                               data-qid="@q.MaCauHoi"
+                                               onchange="markAnswered(@(i+1))">
+                                        <label class="form-check-label" for="dapan_@ans.MaDapAn">
+                                            @ans.NoiDungDapAn
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="mt-2">
+                                <label class="form-label text-muted small">Nhập câu trả lời của bạn vào đây:</label>
+                                <input type="text" class="form-control q-text" 
+                                       data-qid="@q.MaCauHoi" 
+                                       placeholder="Gõ đáp án ngắn gọn..." 
+                                       oninput="markAnswered(@(i+1))" />
+                            </div>
+                        }
+                    </div>
+                }
+            </form>
+        </div>
+    </div>
+
+    <!-- Cột phải: Đồng hồ đếm ngược & Bảng điều hướng câu hỏi -->
+    <div class="col-lg-3">
+        <div class="card p-3 sticky-top" style="top: 80px;">
+            <div class="text-center mb-3">
+                <span class="text-secondary small fw-semibold">THỜI GIAN CÒN LẠI</span>
+                <div id="countdown" class="fs-2 fw-bold text-danger my-1">00:00</div>
+                <small class="text-muted"><i class="fa-solid fa-lock me-1"></i>Tự động nộp khi hết giờ</small>
+            </div>
+            <hr />
+            <div class="mb-3">
+                <label class="fw-semibold small text-secondary mb-2">TIẾN ĐỘ LÀM BÀI</label>
+                <div class="d-flex flex-wrap gap-2">
+                    @for (int i = 0; i < Model.DanhSachCauHoi.Count; i++)
+                    {
+                        <a href="#cau_@Model.DanhSachCauHoi[i].MaCauHoi" 
+                           id="nav_cau_@(i+1)" 
+                           class="btn btn-outline-secondary btn-sm" 
+                           style="width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center; font-weight: bold;">
+                           @(i + 1)
+                        </a>
+                    }
+                </div>
+            </div>
+            <hr />
+            <button type="button" class="btn btn-success w-100 py-2 fw-bold" onclick="submitExam()">
+                <i class="fa-solid fa-paper-plane me-1"></i> NỘP BÀI THI
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    var timeLeft = @Model.ThoiGianLamBai * 60; // Số giây
+    var timerInterval = setInterval(function () {
+        var minutes = Math.floor(timeLeft / 60);
+        var seconds = timeLeft % 60;
+        document.getElementById("countdown").innerText = 
+            (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+        
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            alert("Đã hết thời gian làm bài! Hệ thống đang tự động nộp bài của bạn.");
+            submitExam();
+        }
+        timeLeft--;
+    }, 1000);
+
+    function markAnswered(index) {
+        var btn = document.getElementById("nav_cau_" + index);
+        if (btn) {
+            btn.classList.remove("btn-outline-secondary");
+            btn.classList.add("btn-primary");
+        }
+    }
+
+    function submitExam() {
+        if (!confirm("Bạn có chắc chắn muốn nộp bài thi ngay bây giờ?")) return;
+        clearInterval(timerInterval);
+
+        var dataSubmission = {
+            MaDeThi: parseInt(document.getElementById("maDeThi").value),
+            TraLoi: []
+        };
+
+        // Thu thập đáp án trắc nghiệm
+        var radioChecked = document.querySelectorAll(".q-option:checked");
+        radioChecked.forEach(function(radio) {
+            dataSubmission.TraLoi.push({
+                MaCauHoi: parseInt(radio.getAttribute("data-qid")),
+                MaDapAnChon: parseInt(radio.value),
+                DapAnTuLuan: null
+            });
+        });
+
+        // Thu thập đáp án tự luận
+        var textInputs = document.querySelectorAll(".q-text");
+        textInputs.forEach(function(input) {
+            dataSubmission.TraLoi.push({
+                MaCauHoi: parseInt(input.getAttribute("data-qid")),
+                MaDapAnChon: null,
+                DapAnTuLuan: input.value
+            });
+        });
+
+        // Gửi AJAX lên Server
+        fetch('/Exam/Submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dataSubmission)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = '/Exam/Result/' + data.maKetQua;
+            } else {
+                alert("Lỗi khi nộp bài: " + data.message);
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Có lỗi kết nối máy chủ. Vui lòng thử lại!");
+        });
+    }
+</script>
