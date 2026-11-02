@@ -23,4 +23,4 @@
 - **Hỗ trợ 2 dạng câu hỏi**: Trắc nghiệm lựa chọn đáp án và Tự luận nhập văn bản so sánh với đáp án đúng.
 - **Bộ đếm thời gian thi (Countdown Timer)**: Tự động khóa và nộp bài khi hết giờ.
 - **Quản trị**: Quản lý ngân hàng câu hỏi, môn học và xem bảng điểm kết quả bài thi
-- quản lý : bài thi 
+- ** quản lý : đề thi danh sách thi
